@@ -68,7 +68,6 @@ class BlogIndexData extends Job implements SelfHandling
     protected function tagIndexData($tag)
     {
         $tag = Tag::where('tag', $tag)->firstOrFail();
-        dd($tag);
         $reverse_direction = (bool)$tag->reverse_direction;
 
         $posts = Post::where('published_at', '<=', Carbon::now())
