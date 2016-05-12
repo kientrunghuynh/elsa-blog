@@ -21,9 +21,11 @@ sudo: false
 services:
   - redis-server
 
+before_script:
+  cd sources
+
 before_install:
   - travis_retry composer self-update
-  - cd /sources/
 
 install:
   - if [[ $setup = 'develop' ]]; then travis_retry composer install --no-interaction --prefer-dist; fi
