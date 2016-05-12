@@ -10,6 +10,8 @@ env:
     - APP_DEBUG=true
     - APP_KEY=wRIAX0ss8ygHTT5cD9sGzLVwHCqLNU3U
     - DB_CONNECTION=mysql
+    - DB_DATABASE=elsa_blog
+    - DB_USERNAME=root
     - CACHE_DRIVER=file
     - SESSION_DRIVER=file
     - QUEUE_DRIVER=sync
@@ -25,8 +27,13 @@ env:
 
 sudo: false
 
-#services:
-#  - redis-server
+services:
+  - mysql
+
+mysql:
+  database: elsa_blog
+  username: root
+  encoding: utf8
 
 before_install:
   - cd sources
