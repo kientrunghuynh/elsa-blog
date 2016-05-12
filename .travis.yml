@@ -3,10 +3,17 @@ language: php
 php:
   - 5.6
 
-#env:
-#  global:
-#    - setup=develop
-#
+env:
+  global:
+    - setup=develop
+    - APP_ENV=local
+    - APP_DEBUG=true
+    - APP_KEY=wRIAX0ss8ygHTT5cD9sGzLVwHCqLNU3U
+    - DB_CONNECTION=mysql
+    - CACHE_DRIVER=file
+    - SESSION_DRIVER=file
+    - QUEUE_DRIVER=sync
+
 #matrix:
 #  include:
 #    - php: 5.6
@@ -23,7 +30,7 @@ sudo: false
 
 before_install:
   - cd sources
-  - travis_retry composer self-update
+  - composer self-update
 
 install:
   - composer install --no-interaction --prefer-dist
