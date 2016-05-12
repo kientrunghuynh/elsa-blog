@@ -22,7 +22,7 @@ services:
   - redis-server
 
 before_script:
-  cd sources
+  - cd sources
 
 before_install:
   - travis_retry composer self-update
