@@ -44,8 +44,7 @@ before_install:
 
 install:
   - composer install --no-interaction --prefer-dist
-#  - if [[ $setup = 'develop' ]]; then travis_retry composer install --no-interaction --prefer-dist; fi
-#  - if [[ $setup = 'staging' ]]; then travis_retry composer update --prefer-dist --no-interaction --prefer-stable; fi
-#  - if [[ $setup = 'production' ]]; then travis_retry composer update --prefer-dist --no-interaction --prefer-lowest --prefer-stable; fi
+  - php artisan migrate
+  - php artisan db:seed
 
 script: vendor/bin/phpunit
