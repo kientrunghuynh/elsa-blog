@@ -26,8 +26,9 @@ before_install:
   - travis_retry composer self-update
 
 install:
-  - if [[ $setup = 'develop' ]]; then travis_retry composer install --no-interaction --prefer-dist; fi
-  - if [[ $setup = 'staging' ]]; then travis_retry composer update --prefer-dist --no-interaction --prefer-stable; fi
-  - if [[ $setup = 'production' ]]; then travis_retry composer update --prefer-dist --no-interaction --prefer-lowest --prefer-stable; fi
+  - composer install --no-interaction --prefer-dist; fi
+#  - if [[ $setup = 'develop' ]]; then travis_retry composer install --no-interaction --prefer-dist; fi
+#  - if [[ $setup = 'staging' ]]; then travis_retry composer update --prefer-dist --no-interaction --prefer-stable; fi
+#  - if [[ $setup = 'production' ]]; then travis_retry composer update --prefer-dist --no-interaction --prefer-lowest --prefer-stable; fi
 
 script: vendor/bin/phpunit
