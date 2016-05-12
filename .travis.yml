@@ -59,8 +59,8 @@ before_script:
   - php artisan db:seed
 
 script:
-  # Search for PHP syntax errors.
-  - find -L . -name '*.php' -print0 | xargs -0 -n 1 -P 4 php -l
+  # Search for PHP syntax errors. In this only scan app's folder
+  - find -L ./app -name '*.php' -print0 | xargs -0 -n 1 -P 4 php -l
   # @link http://pear.php.net/package/PHP_CodeSniffer/
   # -p flag: Show progress of the run.
   # -s flag: Show sniff codes in all reports.
@@ -68,5 +68,5 @@ script:
   # -n flag: Do not print warnings. (shortcut for --warning-severity=0)
   # --standard: Use WordPress as the standard.
   # --extensions: Only sniff PHP files.
-  - if [[ "$SNIFF" == "1" ]]; then $PHPCS_DIR/scripts/phpcs -p -s -v -n . --standard=./codesniffer.ruleset.xml --extensions=php; fi
+  - if [[ "$SNIFF" == "1" ]]; then $PHPCS_DIR/scripts/phpcs -p -s -v -n . --standard=./ruleset.xml --extensions=php; fi
   - vendor/bin/phpunit
