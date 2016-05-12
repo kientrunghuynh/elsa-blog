@@ -68,6 +68,5 @@ script:
   # -n flag: Do not print warnings. (shortcut for --warning-severity=0)
   # --standard: Use WordPress as the standard.
   # --extensions: Only sniff PHP files.
-  - phpcs --standard=PSR1 app/
-  - phpcs --standard=PSR2 app/
+  - if [[ "$SNIFF" == "1" ]]; then $PHPCS_DIR/scripts/phpcs -p -s -v -n . --standard=PSR1 --extensions=php; fi
   - vendor/bin/phpunit
