@@ -1,72 +1,69 @@
 language: php
-
 php:
-  - 5.6
-
+- 5.6
 env:
   global:
-    - setup=develop
-    - APP_ENV=local
-    - APP_DEBUG=true
-    - APP_KEY=wRIAX0ss8ygHTT5cD9sGzLVwHCqLNU3U
-    - DB_CONNECTION=mysql
-    - DB_DATABASE=elsa_blog
-    - DB_USERNAME=root
-    - CACHE_DRIVER=file
-    - SESSION_DRIVER=file
-    - QUEUE_DRIVER=sync
-
-#matrix:
-#  include:
-#    - php: 5.6
-#      env: setup=develop
-#    - php: 5.6
-#      env: setup=staging
-#    - php: 5.6
-#      env: setup=production
-
+  - setup=develop
+  - APP_ENV=local
+  - APP_DEBUG=true
+  - APP_KEY=wRIAX0ss8ygHTT5cD9sGzLVwHCqLNU3U
+  - DB_CONNECTION=mysql
+  - DB_DATABASE=elsa_blog
+  - DB_USERNAME=root
+  - CACHE_DRIVER=file
+  - SESSION_DRIVER=file
+  - QUEUE_DRIVER=sync
 sudo: false
-
 services:
-  - mysql
-
+- mysql
 mysql:
   database: elsa_blog
   username: root
   encoding: utf8
-
 before_install:
-  - cd sources
-  - composer self-update
-  - mysql -u root -e 'create database elsa_blog;'
-
+- cd sources
+- composer self-update
+- mysql -u root -e 'create database elsa_blog;'
 install:
-  - composer install --no-interaction --prefer-dist
-
+- composer install --no-interaction --prefer-dist
 before_script:
-  - export PHPCS_DIR=/tmp/phpcs
-  - export SNIFFS_DIR=/tmp/sniffs
-  # Install CodeSniffer for WordPress Coding Standards checks.
-  - if [[ "$SNIFF" == "1" ]]; then git clone -b master --depth 1 https://github.com/squizlabs/PHP_CodeSniffer.git $PHPCS_DIR; fi
-  # Install PHP Compatibility sniffs.
-  - if [[ "$SNIFF" == "1" ]]; then git clone -b master --depth 1 https://github.com/wimg/PHPCompatibility.git $SNIFFS_DIR/PHPCompatibility; fi
-  # Set install path for PHPCS sniffs.
-  # @link https://github.com/squizlabs/PHP_CodeSniffer/blob/4237c2fc98cc838730b76ee9cee316f99286a2a7/CodeSniffer.php#L1941
-  - if [[ "$SNIFF" == "1" ]]; then $PHPCS_DIR/scripts/phpcs --config-set installed_paths $SNIFFS_DIR; fi
-  # After CodeSniffer install you should refresh your path.
-  - if [[ "$SNIFF" == "1" ]]; then phpenv rehash; fi
-  - php artisan migrate
-  - php artisan db:seed
-
+- export PHPCS_DIR=/tmp/phpcs
+- export SNIFFS_DIR=/tmp/sniffs
+- if [[ "$SNIFF" == "1" ]]; then git clone -b master --depth 1 https://github.com/squizlabs/PHP_CodeSniffer.git
+  $PHPCS_DIR; fi
+- if [[ "$SNIFF" == "1" ]]; then git clone -b master --depth 1 https://github.com/wimg/PHPCompatibility.git
+  $SNIFFS_DIR/PHPCompatibility; fi
+- if [[ "$SNIFF" == "1" ]]; then $PHPCS_DIR/scripts/phpcs --config-set installed_paths
+  $SNIFFS_DIR; fi
+- if [[ "$SNIFF" == "1" ]]; then phpenv rehash; fi
+- php artisan migrate
+- php artisan db:seed
 script:
-  # Search for PHP syntax errors. In this only scan app's folder
-  - find -L ./app -name '*.php' -print0 | xargs -0 -n 1 -P 4 php -l
-  # @link http://pear.php.net/package/PHP_CodeSniffer/
-  # -p flag: Show progress of the run.
-  # -s flag: Show sniff codes in all reports.
-  # -v flag: Print verbose output.
-  # -n flag: Do not print warnings. (shortcut for --warning-severity=0)
-  # --standard: Use WordPress as the standard.
-  # --extensions: Only sniff PHP files.
-  - if [[ "$SNIFF" == "1" ]]; then $PHPCS_DIR/scripts/phpcs -p -s -v -n . --standard=PSR1 --extensions=php; fi
-  - vendor/bin/phpunit
+- find -L ./app -name '*.php' -print0 | xargs -0 -n 1 -P 4 php -l
+- if [[ "$SNIFF" == "1" ]]; then $PHPCS_DIR/scripts/phpcs -p -s -v -n . --standard=PSR1
+  --extensions=php; fi
+- vendor/bin/phpunit
+deploy:
+- provider: s3
+  access_key_id: AKIAIL5CGJHOA7V4TSPA
+  secret_access_key: &1
+    secure: EVq1Wql29pv1QxeQsPrL57YaCwjc19Ljqn8YQ1sIcl+C72e9+05CSuKhfY0NRFTk9UxJPMioQ7qqLTHxer4qrVPHRGNQexNo/e2G7u0DlobSvs5q4urunSUlciRnEZ2PKcgfJYs/bLyBs4nIPW44up81e9O9o52hmUB+WxJDPq8gzZLtBziFtrgQmM9NZHs8ZYGCqrYFWOpb5q3lEP+qMKsrHOqH+SfSutw8/MF/rOPmHEWfHd5obvNy2hUxdnaa5CE3xq6rsFLZnxM4rdBa64c6Sdh6rGt8XR6QY7UszwkzO3tR515ikbqEU/UQa+4A+31vAQd8HhKvJDR+kB1SyiK36qHCS3OlIoQR+7kw2aTmkuMuXzx/ohbLKDqOnh049CeS0CP2L4I+wAJMzvYKZs+i8UTKB4iOiu2OSBvEeDIdboOoHUNErvvqaZ6KPekKXQHGXGwh2a4TINJIdhlsF0hHYU03d6X4Xd6Ri03Zvygso1rYUOYLxjM/yUt6LL1vmhIs/piy/sZ5P6KnsFTfcjOFDHLI9tFZaQb2RrEFKuXFcLtO1nMMgAA9XSjODW4o5xlGmHVmoed2rSZuZ86GGa3tpnRehN7KIrIsnixH0dKgOSdMPBuOuKhz5wFArfLZTdSg61/1sd1NaWZ+c5Wactiwr8BbaLN7h0rQ1I3A3aI=
+  local_dir: dpl_cd_upload
+  skip_cleanup: true
+  on: &2
+    repo: kientrunghuynh/elsa-blog
+    branch: develop
+  bucket: elsa-blog-development-deploy
+  upload_dir: develop
+- provider: codedeploy
+  access_key_id: AKIAIL5CGJHOA7V4TSPA
+  secret_access_key: *1
+  bucket: elsa-blog-development-deploy
+  key: develop/source.zip
+  bundle_type: zip
+  application: elsa-blog
+  deployment_group: ElsaBlog
+  on: *2
+before_deploy:
+- mkdir -p dpl_cd_upload
+- mv source.zip dpl_cd_upload/source.zip
