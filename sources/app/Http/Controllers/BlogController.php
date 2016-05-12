@@ -11,6 +11,24 @@ class BlogController extends Controller
 {
     public function index(Request $request)
     {
+        $var = 'tmp';
+        if ($var == 'tmp')
+        {
+            $var2 = 'tmp2';
+            if ($var2 != 'tmp') {
+                if ($var2 == $var) {
+                    $var3 = 'sample';
+                    if ($var == $var3) {
+                        $test = 'checked';
+                    }
+                    else
+                        $var ==$var3;
+                }else {
+                    $var2 = $var;
+                }
+            }
+        }
+        
         $tag = $request->get('tag');
         $data = $this->dispatch(new BlogIndexData($tag));
         $layout = $tag ? Tag::layout($tag) : 'blog.layouts.index';
