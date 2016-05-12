@@ -35,6 +35,9 @@ mysql:
   username: root
   encoding: utf8
 
+before_script:
+  - mysql -u root -e 'create database elsa_blog;'
+
 before_install:
   - cd sources
   - composer self-update
