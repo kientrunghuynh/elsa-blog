@@ -3,36 +3,31 @@ language: php
 php:
   - 5.6
 
-env:
-  global:
-    - setup=develop
-
-matrix:
-  include:
-    - php: 5.6
-      env: setup=develop
-    - php: 5.6
-      env: setup=staging
-    - php: 5.6
-      env: setup=production
+#env:
+#  global:
+#    - setup=develop
+#
+#matrix:
+#  include:
+#    - php: 5.6
+#      env: setup=develop
+#    - php: 5.6
+#      env: setup=staging
+#    - php: 5.6
+#      env: setup=production
 
 sudo: false
 
-services:
-  - redis-server
-
-before_script:
-  - cd sources
+#services:
+#  - redis-server
 
 before_install:
+  - cd sources
   - travis_retry composer self-update
 
 install:
   - if [[ $setup = 'develop' ]]; then travis_retry composer install --no-interaction --prefer-dist; fi
   - if [[ $setup = 'staging' ]]; then travis_retry composer update --prefer-dist --no-interaction --prefer-stable; fi
   - if [[ $setup = 'production' ]]; then travis_retry composer update --prefer-dist --no-interaction --prefer-lowest --prefer-stable; fi
-
-before_script:
-  - cd sources/
 
 script: vendor/bin/phpunit
