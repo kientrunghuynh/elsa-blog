@@ -21,28 +21,28 @@ mysql:
   username: root
   encoding: utf8
 before_install:
-- cd sources
-- composer self-update
-- mysql -u root -e 'create database elsa_blog;'
+  - cd sources
+  - composer self-update
+  - mysql -u root -e 'create database elsa_blog;'
 install:
-- composer install --no-interaction --prefer-dist
+  - composer install --no-interaction --prefer-dist
 before_script:
-- export PHPCS_DIR=/tmp/phpcs
-- export SNIFFS_DIR=/tmp/sniffs
-- if [[ "$SNIFF" == "1" ]]; then git clone -b master --depth 1 https://github.com/squizlabs/PHP_CodeSniffer.git
-  $PHPCS_DIR; fi
-- if [[ "$SNIFF" == "1" ]]; then git clone -b master --depth 1 https://github.com/wimg/PHPCompatibility.git
-  $SNIFFS_DIR/PHPCompatibility; fi
-- if [[ "$SNIFF" == "1" ]]; then $PHPCS_DIR/scripts/phpcs --config-set installed_paths
-  $SNIFFS_DIR; fi
-- if [[ "$SNIFF" == "1" ]]; then phpenv rehash; fi
-- php artisan migrate
-- php artisan db:seed
+  - export PHPCS_DIR=/tmp/phpcs
+  - export SNIFFS_DIR=/tmp/sniffs
+  - if [[ "$SNIFF" == "1" ]]; then git clone -b master --depth 1 https://github.com/squizlabs/PHP_CodeSniffer.git
+    $PHPCS_DIR; fi
+  - if [[ "$SNIFF" == "1" ]]; then git clone -b master --depth 1 https://github.com/wimg/PHPCompatibility.git
+    $SNIFFS_DIR/PHPCompatibility; fi
+  - if [[ "$SNIFF" == "1" ]]; then $PHPCS_DIR/scripts/phpcs --config-set installed_paths
+    $SNIFFS_DIR; fi
+  - if [[ "$SNIFF" == "1" ]]; then phpenv rehash; fi
+  - php artisan migrate
+  - php artisan db:seed
 script:
-- find -L ./app -name '*.php' -print0 | xargs -0 -n 1 -P 4 php -l
-- if [[ "$SNIFF" == "1" ]]; then $PHPCS_DIR/scripts/phpcs -p -s -v -n . --standard=PSR1
-  --extensions=php; fi
-- vendor/bin/phpunit
+  - find -L ./app -name '*.php' -print0 | xargs -0 -n 1 -P 4 php -l
+  - if [[ "$SNIFF" == "1" ]]; then $PHPCS_DIR/scripts/phpcs -p -s -v -n . --standard=PSR1
+    --extensions=php; fi
+  - vendor/bin/phpunit
 deploy:
   # send code to s3
 - provider: s3
@@ -57,7 +57,7 @@ deploy:
     branch: develop
   bucket: elsa-blog-development-deploy
   upload_dir: develop
-- provider: codedeploy # run s3 code-deploy
+- provider: codedeploy #
   wait-until-deployed: true
   access_key_id: AKIAIL5CGJHOA7V4TSPA
   secret_access_key: *1
@@ -68,6 +68,6 @@ deploy:
   deployment_group: ElsaBlog
   on: *2
 before_deploy:
-- zip -r -q source *
-- mkdir -p dpl_cd_upload
-- mv source.zip dpl_cd_upload/source.zip
+  - zip -r -q source *
+  - mkdir -p dpl_cd_upload
+  - mv source.zip dpl_cd_upload/source.zip
