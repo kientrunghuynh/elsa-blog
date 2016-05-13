@@ -44,6 +44,7 @@ script:
   --extensions=php; fi
 - vendor/bin/phpunit
 deploy:
+  # send code to s3
 - provider: s3
   region: us-west-1
   access_key_id: AKIAIL5CGJHOA7V4TSPA
@@ -56,7 +57,7 @@ deploy:
     branch: develop
   bucket: elsa-blog-development-deploy
   upload_dir: develop
-- provider: codedeploy
+- provider: codedeploy # run s3 code-deploy
   wait-until-deployed: true
   access_key_id: AKIAIL5CGJHOA7V4TSPA
   secret_access_key: *1
