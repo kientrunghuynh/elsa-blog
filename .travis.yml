@@ -64,7 +64,7 @@ deploy:
   bucket: elsa-blog-development-deploy
   key: develop/source.zip
   bundle_type: zip
-  application: elsa-blog
+  application: ElsaBlog
   deployment_group: ElsaBlog
   on: *2
 before_deploy:
