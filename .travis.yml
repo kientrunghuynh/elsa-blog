@@ -45,6 +45,7 @@ script:
 - vendor/bin/phpunit
 deploy:
 - provider: s3
+  region: us-west-1
   access_key_id: AKIAIL5CGJHOA7V4TSPA
   secret_access_key: &1
     secure: EVq1Wql29pv1QxeQsPrL57YaCwjc19Ljqn8YQ1sIcl+C72e9+05CSuKhfY0NRFTk9UxJPMioQ7qqLTHxer4qrVPHRGNQexNo/e2G7u0DlobSvs5q4urunSUlciRnEZ2PKcgfJYs/bLyBs4nIPW44up81e9O9o52hmUB+WxJDPq8gzZLtBziFtrgQmM9NZHs8ZYGCqrYFWOpb5q3lEP+qMKsrHOqH+SfSutw8/MF/rOPmHEWfHd5obvNy2hUxdnaa5CE3xq6rsFLZnxM4rdBa64c6Sdh6rGt8XR6QY7UszwkzO3tR515ikbqEU/UQa+4A+31vAQd8HhKvJDR+kB1SyiK36qHCS3OlIoQR+7kw2aTmkuMuXzx/ohbLKDqOnh049CeS0CP2L4I+wAJMzvYKZs+i8UTKB4iOiu2OSBvEeDIdboOoHUNErvvqaZ6KPekKXQHGXGwh2a4TINJIdhlsF0hHYU03d6X4Xd6Ri03Zvygso1rYUOYLxjM/yUt6LL1vmhIs/piy/sZ5P6KnsFTfcjOFDHLI9tFZaQb2RrEFKuXFcLtO1nMMgAA9XSjODW4o5xlGmHVmoed2rSZuZ86GGa3tpnRehN7KIrIsnixH0dKgOSdMPBuOuKhz5wFArfLZTdSg61/1sd1NaWZ+c5Wactiwr8BbaLN7h0rQ1I3A3aI=
@@ -56,6 +57,7 @@ deploy:
   bucket: elsa-blog-development-deploy
   upload_dir: develop
 - provider: codedeploy
+  wait-until-deployed: true
   access_key_id: AKIAIL5CGJHOA7V4TSPA
   secret_access_key: *1
   bucket: elsa-blog-development-deploy
@@ -65,6 +67,6 @@ deploy:
   deployment_group: ElsaBlog
   on: *2
 before_deploy:
-- zip -r source *
+- zip -r -q source *
 - mkdir -p dpl_cd_upload
 - mv source.zip dpl_cd_upload/source.zip
