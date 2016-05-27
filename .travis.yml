@@ -40,9 +40,12 @@ before_script:
   - php artisan db:seed
 script:
   - find -L ./app -name '*.php' -print0 | xargs -0 -n 1 -P 4 php -l
-  - if [[ "$SNIFF" == "1" ]]; then $PHPCS_DIR/scripts/phpcs -p -s -v -n . --standard=PSR1
-    --extensions=php; fi
+  - if [[ "$SNIFF" == "1" ]]; then $PHPCS_DIR/scripts/phpcs -p -s -v -n . --standard=PSR1 --extensions=php; fi
   - vendor/bin/phpunit
+before_deploy:
+  - zip -r -q source *
+  - mkdir -p dpl_cd_upload
+  - mv source.zip dpl_cd_upload/source.zip
 deploy:
   # send code to s3
 - provider: s3
@@ -67,7 +70,3 @@ deploy:
   application: ElsaBlog
   deployment_group: ElsaBlog
   on: *2
-before_deploy:
-  - zip -r -q source *
-  - mkdir -p dpl_cd_upload
-  - mv source.zip dpl_cd_upload/source.zip
